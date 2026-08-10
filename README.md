@@ -55,6 +55,3 @@ The second project builds on the first project and adds transaction functionalit
 
 ---
 
-## 🎯 Learning Goal
-
-This project was developed to strengthen my **C++ programming, problem-solving, file handling, and software development skills**.
