@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -38,11 +37,13 @@ const string UsersFileName = "Users.txt";
 
 stUser CurrentUser;
 
+
 void ShowMainMenue();
 void ShowTransactionsMenue();
 void ShowManageUsersMenue();
 bool CheckAccessPermission(enMainMenuePermissions Permission);
 void Login();
+
 
 struct sClient
 {
@@ -200,6 +201,8 @@ bool ClientExistsByAccountNumber(string AccountNumber, string FileName)
 
 bool UserExistsByUsername(string Username, string FileName)
 {
+
+
     fstream MyFile;
     MyFile.open(FileName, ios::in);//read Mode
 
@@ -282,7 +285,7 @@ int ReadPermissionsToSet()
     cin >> Answer;
     if (Answer == 'y' || Answer == 'Y')
     {
-
+        
 
         Permissions += enMainMenuePermissions::pListClients;
     }
@@ -292,7 +295,7 @@ int ReadPermissionsToSet()
     cin >> Answer;
     if (Answer == 'y' || Answer == 'Y')
     {
-        Permissions = Permissions + enMainMenuePermissions::pAddNewClient;
+        Permissions += enMainMenuePermissions::pAddNewClient;
     }
 
     cout << "\nDelete Client? y/n? ";
@@ -456,8 +459,8 @@ void ShowAccessDeniedMessage()
 
 void ShowAllClientsScreen()
 {
-
-
+   
+    
     if (!CheckAccessPermission(enMainMenuePermissions::pListClients))
     {
         ShowAccessDeniedMessage();
@@ -496,7 +499,10 @@ void ShowAllClientsScreen()
 
 void ShowAllUsersScreen()
 {
+
+
     vector <stUser> vUsers = LoadUsersDataFromFile(UsersFileName);
+
     cout << "\n\t\t\t\t\tUsers List (" << vUsers.size() << ") User(s).";
     cout << "\n_______________________________________________________";
     cout << "_________________________________________\n" << endl;
@@ -520,6 +526,7 @@ void ShowAllUsersScreen()
 
     cout << "\n_______________________________________________________";
     cout << "_________________________________________\n" << endl;
+
 }
 
 void ShowTotalBalances()
@@ -790,6 +797,7 @@ void AddNewUser()
     stUser User;
     User = ReadNewUser();
     AddDataLineToFile(UsersFileName, ConvertUserRecordToLine(User));
+
 }
 
 void AddNewClients()
@@ -1116,7 +1124,7 @@ void ShowUpdateClientScreen()
 void ShowAddNewClientsScreen()
 {
 
-    if (!CheckAccessPermission(enMainMenuePermissions::pAddNewClient))
+    if (!CheckAccessPermission(enMainMenuePermissions::pUpdateClients))
     {
         ShowAccessDeniedMessage();
         return;
@@ -1449,7 +1457,7 @@ void ShowManageUsersMenue()
     cout << "\t[5] Find User.\n";
     cout << "\t[6] Main Menue.\n";
     cout << "===========================================\n";
-
+    
 
     PerfromManageUsersMenueOption((enManageUsersMenueOptions)ReadManageUsersMenueOption());
 }
@@ -1524,7 +1532,7 @@ void ShowMainMenue()
     cout << "\t[7] Manage Users.\n";
     cout << "\t[8] Logout.\n";
     cout << "===========================================\n";
-
+    
 
     PerfromMainMenueOption((enMainMenueOptions)ReadMainMenueOption());
 }
@@ -1572,8 +1580,8 @@ void Login()
 }
 
 int main()
+
 {
-    
     Login();
 
     system("pause>0");
