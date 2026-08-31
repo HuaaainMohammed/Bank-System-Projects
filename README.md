@@ -1,57 +1,56 @@
 # 🏦 Bank System Projects
 
-A collection of two **C++ Bank System projects** developed during my **Problem Solving journey**.
-
-The second project is an enhanced version of the first, with additional **transaction features**.
+A collection of C++ Bank System projects developed during my Problem Solving journey. This repository tracks the evolution of the application from basic client management to advanced access control and security permissions.
 
 ---
 
 ## 📌 Projects
 
 ### 1️⃣ Bank System
-
 The first version focuses on managing bank clients and working with data stored in files.
 
 **Features:**
-
-- 👤 Add new clients
-- 🗑️ Delete clients
-- ✏️ Update client information
-- 🔎 Find clients
-- 📋 Display client list
-- 💾 File handling and data persistence
+* 👤 Add new clients
+* 🗑️ Delete clients
+* ✏️ Update client information
+* 🔍 Find clients
+* 📋 Display client list
+* 💾 File handling and data persistence
 
 ---
 
 ### 2️⃣ Bank System with Transactions
+An enhanced version of the first project with additional financial transaction capabilities.
 
-An enhanced version of the first project with additional banking transaction functionality.
+**Features:**
+* 💵 Deposit & Withdraw operations
+* 📊 Total balances report
+* ⚙️ Balance validation and checks
 
-**Additional Features:**
+---
 
-- 💰 Deposit
-- 💸 Withdraw
-- 💳 Balance management
-- 🔄 Transactions menu
+### 3️⃣ Bank System with User Management & Permissions
+The third phase introducing access control, user management, and security permission layers.
+
+**Features:**
+* 🔐 **Access Control System:** Checks user permissions before granting access to specific main menu screens.
+* 👥 **User Management:** Full CRUD operations for system users (List, Add, Delete, Update, Find).
+* 🔑 **Permissions Structure:** Assigns specific privileges to users using Enums.
+* 🔄 **Dynamic Updates:** Instant updates for user records, passwords, and access levels stored in files.
 
 ---
 
 ## 🛠️ Technologies & Concepts
 
-- 💻 C++
-- 🧩 Structs
-- 📦 Vectors
-- 🔧 Functions
-- 📁 File Handling
-- 🧠 Problem Solving
+* 💻 **C++**
+* 🏗️ **Structs & Vectors**
+* ⚙️ **Functions & Control Flow**
+* 📂 **File Handling & Persistence**
+* 🎯 **Problem Solving & Clean Code**
+* 🔐 **Enums & Access Control Logic**
 
 ---
 
 ## 📈 Project Progress
 
-**Version 1 → Version 2**
-
-The second project builds on the first project and adds transaction functionality, allowing the system to handle more realistic banking operations.
-
----
-
+`Version 1 (Client Management)` ➡️ `Version 2 (Transactions)` ➡️ `Version 3 (Users & Permissions)`
