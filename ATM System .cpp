@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <iomanip>
-
 using namespace std;
 
 struct sClient
@@ -22,6 +21,7 @@ enum enMainMenueOptions {
 };
 
 const string ClientsFileName = "Clients.txt";
+
 sClient CurrentClient;
 
 void ShowMainMenue();
@@ -174,49 +174,20 @@ vector <sClient> SaveCleintsDataToFile(string FileName, vector <sClient> vClient
 
 }
 
-bool DepositBalanceToClientByAccountNumber(string AccountNumber, double Amount, vector <sClient>& vClients)
+bool LoadClientInfo(string AccountNumber, string PinCode)
 {
-    char Answer = 'n';
-
-    cout << "\n\nAre you sure you want perfrom this transaction? y/n ? ";
-    cin >> Answer;
-    if (Answer == 'y' || Answer == 'Y')
-    {
-
-        for (sClient& C : vClients)
-        {
-            if (C.AccountNumber == AccountNumber)
-            {
-                C.AccountBalance += Amount;
-                SaveCleintsDataToFile(ClientsFileName, vClients);
-                cout << "\n\nDone Successfully. New balance is: " << C.AccountBalance;
-
-                return true;
-            }
-
-        }
 
 
+    if (FindClientByAccountNumberAndPinCode(AccountNumber, PinCode, CurrentClient))
+        return true;
+    else
         return false;
-    }
 
 }
 
-short ReadQuickWithdrawOption()
+short getQuickWithDrawAmount(short QuickWithdrawOption)
 {
-    short Choice = 0;
-    while (Choice < 1 || Choice>9)
-    {
-        cout << "\nChoose what to do from [1] to [9] ? ";
-        cin >> Choice;
-    }
-
-    return Choice;
-}
-
-short getQuickWithDrawAmount(short QuickWithDrawOption)
-{
-    switch (QuickWithDrawOption)
+    switch (QuickWithdrawOption)
     {
     case 1:
         return  20;
@@ -236,17 +207,40 @@ short getQuickWithDrawAmount(short QuickWithDrawOption)
         return 1000;
     default:
         return 0;
-
     }
-
 }
 
-void PerfromQuickWithdrawOption(short QuickWithDrawOption)
+bool DepositBalanceToClientByAccountNumber(string AccountNumber, double Amount, vector <sClient>& vClients)
 {
-    if (QuickWithDrawOption == 9)//exit 
-        return;
+    char Answer = 'n';
 
-    short WithDrawBalance = getQuickWithDrawAmount(QuickWithDrawOption);
+    cout << "\n\nAre you sure you want perfrom this transaction? y/n ? ";
+    cin >> Answer;
+
+    if (Answer == 'y' || Answer == 'Y')
+    {
+        for (sClient& C : vClients)
+        {
+            if (C.AccountNumber == AccountNumber)
+            {
+                C.AccountBalance += Amount;
+                SaveCleintsDataToFile(ClientsFileName, vClients);
+                cout << "\n\nDone Successfully. New balance is: " << C.AccountBalance;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void PerfromQuickWithdrawOption(short QuickWithdrawOption)
+{
+
+    if (QuickWithdrawOption == 9)
+        return;
+    
+    short WithDrawBalance = getQuickWithDrawAmount(QuickWithdrawOption);
 
     if (WithDrawBalance > CurrentClient.AccountBalance)
     {
@@ -258,10 +252,106 @@ void PerfromQuickWithdrawOption(short QuickWithDrawOption)
     }
 
     vector <sClient> vClients = LoadCleintsDataFromFile(ClientsFileName);
-    DepositBalanceToClientByAccountNumber(CurrentClient.AccountNumber, WithDrawBalance * -1, vClients);
-    CurrentClient.AccountBalance -= WithDrawBalance;
+    if (DepositBalanceToClientByAccountNumber(CurrentClient.AccountNumber, WithDrawBalance * -1, vClients))
+    {
+        CurrentClient.AccountBalance -= WithDrawBalance;
+    }
+    
 
+}
 
+short ReadQuickWithdrawOption()
+{
+    short Choice = 0;
+    while (Choice < 1 || Choice>9)
+    {
+        cout << "\nChoose what to do from [1] to [9] ? ";
+        cin >> Choice;
+    }
+
+    return Choice;
+}
+
+void ShowQuickWithdrawScreen()
+{
+    system("cls");
+    cout << "===========================================\n";
+    cout << "\t\tQucik Withdraw\n";
+    cout << "===========================================\n";
+    cout << "\t[1] 20\t\t[2] 50\n";
+    cout << "\t[3] 100\t\t[4] 200\n";
+    cout << "\t[5] 400\t\t[6] 600\n";
+    cout << "\t[7] 800\t\t[8] 1000\n";
+    cout << "\t[9] Exit\n";
+    cout << "===========================================\n";
+    cout << "Your Balance is " << CurrentClient.AccountBalance;
+
+    PerfromQuickWithdrawOption(ReadQuickWithdrawOption());
+
+}
+
+void GoBackToMainMenue()
+{
+    cout << "\n\nPress any key to go back to Main Menue...";
+    system("pause>0");
+    ShowMainMenue();
+}
+
+short ReadMainMenueOption()
+{
+    cout << "Choose what do you want to do? [1 to 5]? ";
+    short Choice = 0;
+    cin >> Choice;
+
+    return Choice;
+}
+
+int ReadWithDrawAmont()
+{
+    int Amount;
+
+    cout << "\nEnter an amount multiple of 5's ? ";
+    cin >> Amount;
+
+    while (Amount % 5 != 0)
+    {
+        cout << "\nEnter an amount multiple of 5's ? ";
+        cin >> Amount;
+    }
+    return Amount;
+
+}
+
+void PerfromNormalWithdrawOption()
+{
+ 
+    int WithDrawBalance = ReadWithDrawAmont();
+
+    if (WithDrawBalance > CurrentClient.AccountBalance)
+    {
+        cout << "\nThe amount exceeds your balance, make another choice.\n";
+        cout << "Press Anykey to continue...";
+        system("pause>0");
+        ShowNormalWithDrawScreen();
+        return;
+    }
+
+    vector <sClient> vClients = LoadCleintsDataFromFile(ClientsFileName);
+    if (DepositBalanceToClientByAccountNumber(CurrentClient.AccountNumber, WithDrawBalance * -1, vClients))
+    {
+        CurrentClient.AccountBalance -= WithDrawBalance;
+    }
+    
+
+}
+
+void ShowNormalWithDrawScreen()
+{
+    system("cls");
+    cout << "===========================================\n";
+    cout << "\t\tNormal Withdraw Screen\n";
+    cout << "===========================================\n";
+    PerfromNormalWithdrawOption();
 }
 
 double ReadDepositAmount()
@@ -280,12 +370,14 @@ double ReadDepositAmount()
 
 void PerfromDepositOption()
 {
-
     double DepositAmount = ReadDepositAmount();
 
     vector <sClient> vClients = LoadCleintsDataFromFile(ClientsFileName);
-    DepositBalanceToClientByAccountNumber(CurrentClient.AccountNumber, DepositAmount, vClients);
-    CurrentClient.AccountBalance += DepositAmount;
+    if (DepositBalanceToClientByAccountNumber(CurrentClient.AccountNumber, DepositAmount, vClients))
+    {
+        CurrentClient.AccountBalance += DepositAmount;
+    }
+    
 }
 
 void ShowDepositScreen()
@@ -295,7 +387,6 @@ void ShowDepositScreen()
     cout << "\t\tDeposit Screen\n";
     cout << "===========================================\n";
     PerfromDepositOption();
-
 }
 
 void ShowCheckBalanceScreen()
@@ -306,84 +397,6 @@ void ShowCheckBalanceScreen()
     cout << "===========================================\n";
     cout << "Your Balance is " << CurrentClient.AccountBalance << "\n";
 
-}
-
-int ReadWithDrawAmont()
-{
-    int Amount;
-    cout << "\nEnter an amount multiple of 5's ? ";
-
-    cin >> Amount;
-
-    while (Amount % 5 != 0)
-    {
-        cout << "\nEnter an amount multiple of 5's ? ";
-        cin >> Amount;
-    }
-    return Amount;
-}
-
-void PerfromNormalWithdrawOption()
-{
-
-    int WithDrawBalance = ReadWithDrawAmont();
-
-    if (WithDrawBalance > CurrentClient.AccountBalance)
-    {
-        cout << "\nThe amount exceeds your balance, make another choice.\n";
-        cout << "Press Anykey to continue...";
-        system("pause>0");
-        ShowNormalWithDrawScreen();
-        return;
-    }
-
-    vector <sClient> vClients = LoadCleintsDataFromFile(ClientsFileName);
-    DepositBalanceToClientByAccountNumber(CurrentClient.AccountNumber, WithDrawBalance * -1, vClients);
-    CurrentClient.AccountBalance -= WithDrawBalance;
-
-
-}
-
-void ShowNormalWithDrawScreen()
-{
-    system("cls");
-    cout << "===========================================\n";
-    cout << "\t\tNormal Withdraw Screen\n";
-    cout << "===========================================\n";
-    PerfromNormalWithdrawOption();
-}
-
-void ShowQuickWithdrawScreen()
-{
-    system("cls");
-    cout << "===========================================\n";
-    cout << "\t\tQucik Withdraw\n";
-    cout << "===========================================\n";
-    cout << "\t[1] 20\t\t[2] 50\n";
-    cout << "\t[3] 100\t\t[4] 200\n";
-    cout << "\t[5] 400\t\t[6] 600\n";
-    cout << "\t[7] 800\t\t[8] 1000\n";
-    cout << "\t[9] Exit\n";
-    cout << "===========================================\n";
-    cout << "Your Balance is " << CurrentClient.AccountBalance;
-
-    PerfromQuickWithdrawOption(ReadQuickWithdrawOption());
-}
-
-void GoBackToMainMenue()
-{
-    cout << "\n\nPress any key to go back to Main Menue...";
-    system("pause>0");
-    ShowMainMenue();
-}
-
-short ReadMainMenueOption()
-{
-    cout << "Choose what do you want to do? [1 to 5]? ";
-    short Choice = 0;
-    cin >> Choice;
-
-    return Choice;
 }
 
 void PerfromMainMenueOption(enMainMenueOptions MainMenueOption)
@@ -441,17 +454,9 @@ void ShowMainMenue()
     PerfromMainMenueOption((enMainMenueOptions)ReadMainMenueOption());
 }
 
-bool  LoadClientInfo(string AccountNumber, string PinCode)
-{
-
-    if (FindClientByAccountNumberAndPinCode(AccountNumber, PinCode, CurrentClient))
-        return true;
-    else
-        return false;
-}
-
 void Login()
 {
+
     bool LoginFaild = false;
     string AccountNumber, PinCode;
     do
@@ -476,7 +481,6 @@ void Login()
     } while (LoginFaild);
 
     ShowMainMenue();
-
 }
 
 int main()
